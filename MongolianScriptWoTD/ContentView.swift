@@ -35,7 +35,7 @@ struct VerticalWord: View {
             )
             .rotationEffect(.degrees(90))
             .scaleEffect(scale)
-            .frame(width: textSize.height * scale, height: textSize.width * scale).clipped(antialiased: false)
+            .frame(width: textSize.height * scale, height: textSize.width * scale)
     }
 }
 

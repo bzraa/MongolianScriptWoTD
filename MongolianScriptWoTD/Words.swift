@@ -30,13 +30,14 @@ enum WordStore {
             let data = try Data(contentsOf: url)
             let entries = try JSONDecoder().decode([WordEntry].self, from: data)
             return WordLoadResult(entries: entries.isEmpty ? fallback : entries, status: "OK")
+//            return WordLoadResult(entries: fallback, status: "DECODE ERROR: none")
         } catch {
             return WordLoadResult(entries: fallback, status: "DECODE ERROR: \(error)")
         }
     }
 
     private static let fallback = [
-        WordEntry(mongolian: "ᠮᠡᠷᢉᠡᠨ  ", meaning: "Монгол", pronunciation: "Монгол улсын нэр")
+        WordEntry(mongolian: "ᠪᠦᠳᠡᢉᠢᠷᠡᢈᠦ", meaning: "Монгол", pronunciation: "Монгол улсын нэр")
     ]
 }
 

@@ -7,18 +7,49 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		B255EA8330B734C700E6D9E3 /* PreviewMSWoTD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewMSWoTD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2E284A530B632220083A93C /* MongolianScriptWoTD.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MongolianScriptWoTD.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B255EA9F30B7356100E6D9E3 /* Exceptions for "MongolianScriptWoTD" folder in "PreviewMSWoTD" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				BackgroundTheme.swift,
+				ContentView.swift,
+				Fonts/ClassicalMongolianDashitseden.ttf,
+				Support.swift,
+				WordLists/words.json,
+				Words.swift,
+			);
+			target = B255EA8230B734C700E6D9E3 /* PreviewMSWoTD */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		B255EA8430B734C800E6D9E3 /* PreviewMSWoTD */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PreviewMSWoTD;
+			sourceTree = "<group>";
+		};
 		B2E284A730B632220083A93C /* MongolianScriptWoTD */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B255EA9F30B7356100E6D9E3 /* Exceptions for "MongolianScriptWoTD" folder in "PreviewMSWoTD" target */,
+			);
 			path = MongolianScriptWoTD;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B255EA8030B734C700E6D9E3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B2E284A230B632220083A93C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				B2E284A730B632220083A93C /* MongolianScriptWoTD */,
+				B255EA8430B734C800E6D9E3 /* PreviewMSWoTD */,
 				B2E284A630B632220083A93C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				B2E284A530B632220083A93C /* MongolianScriptWoTD.saver */,
+				B255EA8330B734C700E6D9E3 /* PreviewMSWoTD.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,6 +91,28 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		B255EA8230B734C700E6D9E3 /* PreviewMSWoTD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B255EA8D30B734C900E6D9E3 /* Build configuration list for PBXNativeTarget "PreviewMSWoTD" */;
+			buildPhases = (
+				B255EA7F30B734C700E6D9E3 /* Sources */,
+				B255EA8030B734C700E6D9E3 /* Frameworks */,
+				B255EA8130B734C700E6D9E3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B255EA8430B734C800E6D9E3 /* PreviewMSWoTD */,
+			);
+			name = PreviewMSWoTD;
+			packageProductDependencies = (
+			);
+			productName = PreviewMSWoTD;
+			productReference = B255EA8330B734C700E6D9E3 /* PreviewMSWoTD.app */;
+			productType = "com.apple.product-type.application";
+		};
 		B2E284A430B632220083A93C /* MongolianScriptWoTD */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B2E284AE30B632220083A93C /* Build configuration list for PBXNativeTarget "MongolianScriptWoTD" */;
@@ -88,8 +143,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					B255EA8230B734C700E6D9E3 = {
+						CreatedOnToolsVersion = 26.5;
+					};
 					B2E284A430B632220083A93C = {
 						CreatedOnToolsVersion = 26.5;
 						LastSwiftMigration = 2650;
@@ -111,11 +170,19 @@
 			projectRoot = "";
 			targets = (
 				B2E284A430B632220083A93C /* MongolianScriptWoTD */,
+				B255EA8230B734C700E6D9E3 /* PreviewMSWoTD */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B255EA8130B734C700E6D9E3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B2E284A330B632220083A93C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -126,6 +193,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B255EA7F30B734C700E6D9E3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B2E284A130B632220083A93C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -136,6 +210,73 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		B255EA8B30B734C900E6D9E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 693D55AL6X;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SOLO.PreviewMSWoTD;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B255EA8C30B734C900E6D9E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 693D55AL6X;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = SOLO.PreviewMSWoTD;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		B2E284AC30B632220083A93C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -303,6 +444,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B255EA8D30B734C900E6D9E3 /* Build configuration list for PBXNativeTarget "PreviewMSWoTD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B255EA8B30B734C900E6D9E3 /* Debug */,
+				B255EA8C30B734C900E6D9E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B2E2849F30B632220083A93C /* Build configuration list for PBXProject "MongolianScriptWoTD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
