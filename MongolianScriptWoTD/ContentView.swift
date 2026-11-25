@@ -12,21 +12,30 @@ import SwiftUI
 struct VerticalWord: View {
     let text: String
     let fontSize: CGFloat
-
+    var maxLength: CGFloat = .infinity   // longest the word may be on screen
+    
     @State private var textSize: CGSize = .zero
-
+    
+    private var scale: CGFloat {
+        guard textSize.width > maxLength, textSize.width > 0 else { return 1 }
+        return maxLength / textSize.width
+    }
+    
     var body: some View {
-        Text(text)
+        Text(text )
             .font(.custom(mongolianFontName, size: fontSize))
             .lineLimit(1)
             .fixedSize()
             .background(
                 GeometryReader { proxy in
-                    Color.clear.onAppear { textSize = proxy.size }
+                    Color.clear
+                        .onAppear { textSize = proxy.size }
+                        .onChange(of: proxy.size) { _, new in textSize = new }
                 }
             )
             .rotationEffect(.degrees(90))
-            .frame(width: textSize.height, height: textSize.width)
+            .scaleEffect(scale)
+            .frame(width: textSize.height * scale, height: textSize.width * scale).clipped(antialiased: false)
     }
 }
 
@@ -51,32 +60,32 @@ extension Animation {
 
 struct ContentView: View {
     var theme: BackgroundTheme = .blue
-
+    
     @State private var movingWords: [MovingWord] = []
     @State private var phase: AnimationPhase = .flowing
-
+    
     @State private var overlayOpacity: Double = 0
     @State private var panelOpacity: Double = 0
     @State private var dimOpacity: Double = 0
     @State private var panelOffset: CGFloat = 16
-
+    
     @State private var showFeaturedBg = false
     @State private var featuredBgPhase = 0
     @State private var featuredBgOpacity: Double = 1
-
+    
     @State private var featuredEntry = wordEntries[0]
-
+    
     @State private var screenWidth: CGFloat = 0
     @State private var featuredBgLength: CGFloat = 0
-
+    
     private let laneCount = 8
     private let reservedLanes: Set<Int> = [3, 4]
-
+    
     private let spawnTimer = Timer.publish(every: 1.6, on: .main, in: .common)
         .autoconnect()
-
+    
     private let sampleWords = wordEntries.map { $0.mongolian }
-
+    
     private func wordSize(_ geometry: GeometryProxy) -> CGFloat {
         fittedSize(
             featuredEntry.mongolian,
@@ -84,11 +93,11 @@ struct ContentView: View {
             maxLength: geometry.size.height * 0.7
         )
     }
-
+    
     var body: some View {
         GeometryReader { geometry in
             let half = geometry.size.width / 2
-
+            
             ZStack {
                 // 1. Background gradient
                 LinearGradient(
@@ -97,7 +106,8 @@ struct ContentView: View {
                     endPoint: .top
                 )
                 .ignoresSafeArea()
-
+                
+                
                 // 2. Flowing words
                 ForEach(movingWords) { word in
                     FallingWord(
@@ -108,7 +118,7 @@ struct ContentView: View {
                         movingWords.removeAll { $0.id == word.id }
                     }
                 }
-
+                
                 // 3. Featured word in the background
                 if showFeaturedBg {
                     HStack(alignment: .center, spacing: 0) {
@@ -118,22 +128,16 @@ struct ContentView: View {
                         )
                         .opacity(0)
                         .overlay {
-                            let travel = geometry.size.height / 2 + featuredBgLength / 2 + 20
+                            let scale = featuredBgLength > 0
+                            ? min(1, geometry.size.height * 0.8 / featuredBgLength)
+                            : 1
+                            let travel = geometry.size.height / 2 + featuredBgLength * scale / 2 + 20
                             let targetY: CGFloat = featuredBgPhase == 0 ? -travel
-                                                 : featuredBgPhase == 1 ? 0
-                                                 : travel
-
+                            : featuredBgPhase == 1 ? 0
+                            : travel
+                            
                             Text(featuredEntry.mongolian)
-                                .font(
-                                    .custom(
-                                        mongolianFontName,
-                                        size: fittedSize(
-                                            featuredEntry.mongolian,
-                                            maxSize: 280,
-                                            maxLength: geometry.size.height * 0.8
-                                        )
-                                    )
-                                )
+                                .font(.custom(mongolianFontName, size: 280))
                                 .foregroundStyle(theme.wordColor)
                                 .lineLimit(1)
                                 .fixedSize()
@@ -145,40 +149,42 @@ struct ContentView: View {
                                     }
                                 )
                                 .rotationEffect(.degrees(90))
+                                .scaleEffect(scale)
                                 .opacity(featuredBgLength > 0 ? featuredBgOpacity : 0)
                                 .offset(y: targetY)
                         }
                         .padding(.trailing, 12)
                         .frame(width: half, alignment: .trailing)
-
+                        
                         Color.clear
                             .frame(width: half)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-
+                
                 // 4. Dark layer
                 Color.black
                     .opacity(dimOpacity * 0.6)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
-
+                
                 // 5. Featured overlay
                 if phase != .flowing {
                     HStack(alignment: .center, spacing: 0) {
                         VerticalWord(
                             text: featuredEntry.mongolian,
-                            fontSize: wordSize(geometry)
+                            fontSize: wordSize(geometry),
+                            maxLength: geometry.size.height * 0.8
                         )
                         .foregroundStyle(.white)
                         .padding(.trailing, 12)
                         .frame(width: half, alignment: .trailing)
-
+                        
                         VStack(alignment: .leading, spacing: 12) {
                             Text(featuredEntry.meaning)
                                 .font(.system(size: 24, weight: .medium))
                                 .foregroundStyle(.white)
-
+                            
                             Text(featuredEntry.pronunciation)
                                 .font(.system(size: 16))
                                 .foregroundStyle(.white.opacity(0.65))
@@ -193,6 +199,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .zIndex(2)
                 }
+                
             }
             .onReceive(spawnTimer) { _ in spawnRandomWord() }
             .onAppear {
@@ -201,36 +208,45 @@ struct ContentView: View {
             }
         }
         .ignoresSafeArea()
+        .overlay(alignment: .topLeading) {
+            Text("words: \(wordEntries.count)\n\(wordStatus)")
+                .font(.system(size: 14, weight: .bold))
+                .padding(8)
+                .background(.black.opacity(0.7))
+                .foregroundStyle(.white)
+                .padding(.top, 40)
+                .padding(.leading, 12)
+        }
     }
-
+    
     // MARK: - Helpers
-
+    
     private func fittedSize(
         _ text: String,
         maxSize: CGFloat,
         maxLength: CGFloat
     ) -> CGFloat {
-        let estimatedLength = CGFloat(max(text.count, 1)) * 0.55
+        let estimatedLength = CGFloat(max(text.count, 1)) * 0.75
         return min(maxSize, maxLength / estimatedLength)
     }
-
+    
     // MARK: - Random spawning
-
+    
     private func spawnRandomWord() {
         guard screenWidth > 0 else { return }
-
+        
         let usedLanes = Set(movingWords.map { $0.lane })
         let freeLanes = (0..<laneCount).filter {
             !reservedLanes.contains($0) && !usedLanes.contains($0)
         }
         guard let lane = freeLanes.randomElement() else { return }
-
+        
         let laneWidth = screenWidth / CGFloat(laneCount)
         let maxSize = min(220, laneWidth * 1.0)
         let minSize = maxSize * 0.55
         let size = CGFloat.random(in: minSize...maxSize)
         let t = Double((size - minSize) / (maxSize - minSize))
-
+        
         movingWords.append(
             MovingWord(
                 text: sampleWords.randomElement()!,
@@ -242,15 +258,15 @@ struct ContentView: View {
             )
         )
     }
-
+    
     // MARK: - Featured cycle
-
+    
     private func startCycle(screenHeight: CGFloat) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             runFeaturedCycle(screenHeight: screenHeight)
         }
     }
-
+    
     private func runFeaturedCycle(screenHeight: CGFloat) {
         let start: Double = 0.15
         let toCenter: Double = 4.5
@@ -258,21 +274,21 @@ struct ContentView: View {
         let panelDelay: Double = 1.2
         let hold: Double = 3.5
         let toBottom: Double = 4.0
-
+        
         featuredEntry = wordEntries.randomElement()!
-
+        
         featuredBgPhase = 0
         featuredBgLength = 0
         featuredBgOpacity = 0.95
         panelOffset = 16
         showFeaturedBg = true
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + start) {
             withAnimation(.featuredArrive(toCenter)) {
                 featuredBgPhase = 1
             }
         }
-
+        
         let overlayStart = start + toCenter - overlayLead
         DispatchQueue.main.asyncAfter(deadline: .now() + overlayStart) {
             phase = .entering
@@ -284,7 +300,7 @@ struct ContentView: View {
                 overlayOpacity = 1
             }
         }
-
+        
         let panelStart = overlayStart + panelDelay
         DispatchQueue.main.asyncAfter(deadline: .now() + panelStart) {
             phase = .featured
@@ -293,7 +309,7 @@ struct ContentView: View {
                 panelOffset = 0
             }
         }
-
+        
         let exitStart = panelStart + hold
         DispatchQueue.main.asyncAfter(deadline: .now() + exitStart) {
             phase = .exiting
@@ -309,18 +325,18 @@ struct ContentView: View {
                 featuredBgOpacity = 0.95
             }
         }
-
+        
         let departStart = exitStart + 0.9
         DispatchQueue.main.asyncAfter(deadline: .now() + departStart) {
             withAnimation(.featuredDepart(toBottom)) {
                 featuredBgPhase = 2
             }
         }
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + exitStart + 1.3) {
             phase = .flowing
         }
-
+        
         let total = departStart + toBottom
         DispatchQueue.main.asyncAfter(deadline: .now() + total) {
             showFeaturedBg = false
@@ -346,10 +362,10 @@ struct FallingWord: View {
     let color: Color
     let screenHeight: CGFloat
     let onRemove: () -> Void
-
+    
     @State private var offsetY: CGFloat = -5000
     @State private var hasStarted = false
-
+    
     var body: some View {
         GeometryReader { geometry in
             Text(word.text)
@@ -370,31 +386,33 @@ struct FallingWord: View {
                 )
         }
     }
-
+    
     private func start(length: CGFloat) {
         guard !hasStarted else { return }
         hasStarted = true
-
+        
         let startY = -length / 2
         let endY = screenHeight + length / 2
-
+        
         let distance = endY - startY
         let duration = word.duration * Double(distance / (screenHeight + 600))
-
+        
         offsetY = startY
-
+        
         DispatchQueue.main.async {
             withAnimation(.linear(duration: duration)) {
                 offsetY = endY
             }
         }
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             onRemove()
         }
     }
 }
 
-#Preview {
+#Preview("Pink") {
+    let _ = FontLoader.registerFonts()
     ContentView(theme: .pink)
 }
+

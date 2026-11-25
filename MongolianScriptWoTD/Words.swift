@@ -1,10 +1,3 @@
-//
-//  Words.swift
-//  MongolianScriptWoTD
-//
-//  Created by Bazarsad Uurdmandakh on 2026.11.24.
-//
-
 import Foundation
 
 struct WordEntry: Codable {
@@ -13,26 +6,40 @@ struct WordEntry: Codable {
     let pronunciation: String
 }
 
+struct WordLoadResult {
+    let entries: [WordEntry]
+    let status: String
+}
+
 enum WordStore {
-    static func load() -> [WordEntry] {
+    static func load() -> WordLoadResult {
         let bundle = Bundle(for: BundleToken.self)
-        let url = bundle.url(forResource: "words", withExtension: "json", subdirectory: "WordLists")
+
+        guard let url = bundle.url(forResource: "words", withExtension: "json", subdirectory: "WordLists")
             ?? bundle.url(forResource: "words", withExtension: "json")
+        else {
+            let jsons = (bundle.urls(forResourcesWithExtension: "json", subdirectory: nil) ?? [])
+                .map(\.lastPathComponent)
+            return WordLoadResult(
+                entries: fallback,
+                status: "NOT FOUND in \(bundle.bundleURL.lastPathComponent). json files in bundle: \(jsons)"
+            )
+        }
 
-        guard
-            let url,
-            let data = try? Data(contentsOf: url),
-            let entries = try? JSONDecoder().decode([WordEntry].self, from: data),
-            !entries.isEmpty
-        else { return fallback }
-
-        return entries
+        do {
+            let data = try Data(contentsOf: url)
+            let entries = try JSONDecoder().decode([WordEntry].self, from: data)
+            return WordLoadResult(entries: entries.isEmpty ? fallback : entries, status: "OK")
+        } catch {
+            return WordLoadResult(entries: fallback, status: "DECODE ERROR: \(error)")
+        }
     }
 
-    // keeps the saver from crashing if the file is missing or invalid
     private static let fallback = [
-        WordEntry(mongolian: "ᠮᠣᠩᠭᠤᠯ", meaning: "Монгол", pronunciation: "Монгол улсын нэр")
+        WordEntry(mongolian: "ᠮᠡᠷᢉᠡᠨ  ", meaning: "Монгол", pronunciation: "Монгол улсын нэр")
     ]
 }
 
-let wordEntries = WordStore.load()
+private let loadedWords = WordStore.load()
+let wordEntries = loadedWords.entries
+let wordStatus = loadedWords.status
